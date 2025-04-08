@@ -1,7 +1,5 @@
 from telegram import Bot
 import asyncio
-
-# Конфигурация
 TOKEN = "8189040421:AAGr_Y32jcTxuR4qLTN3sPzYfdqEewkEPxI"
 CHAT_ID = "5164380779"
 
