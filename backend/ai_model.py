@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
-import pandas as pd
 import os
 from backend.math_model_analise import *
 
@@ -39,7 +38,7 @@ class FilterConditionModel(nn.Module):
         return self.fc(x)
 
 
-def save_model(model, optimizer, path="filter_model"):
+def save_model(model, optimizer, path="C:/Users/artem/PycharmProjects/PythonProject/backend/filter_model"):
     torch.save({
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
@@ -47,7 +46,7 @@ def save_model(model, optimizer, path="filter_model"):
     print(f"Model saved to {path}.pth")
 
 
-def load_model(model, optimizer=None, path="filter_model"):
+def load_model(model, optimizer=None, path="C:/Users/artem/PycharmProjects/PythonProject/backend/filter_model") -> bool:
     if os.path.exists(f"{path}.pth"):
         checkpoint = torch.load(f"{path}.pth")
         model.load_state_dict(checkpoint['model_state_dict'])
@@ -82,8 +81,8 @@ def train_model(model, dataloader, criterion, optimizer, epochs=20):
     return model
 
 
-def main():
-    df = pd.read_csv("C:/Users/artem/PycharmProjects/PythonProject/data.csv")
+def main() -> list:
+    df = pd.read_csv("C:/Users/artem/PycharmProjects/PythonProject/backend/data.csv")
 
     dataset = FilterDataset(df[['Value1', 'Value2', 'Empty']])
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
@@ -100,15 +99,17 @@ def main():
     data_list = start_api()
     print(data_list)
     model.eval()
-    test_data = torch.tensor([data_list], dtype=torch.float32)
+    data = torch.tensor([data_list], dtype=torch.float32)
     with torch.no_grad():
-        outputs = model(test_data)
+        outputs = model(data)
         predictions = torch.argmax(outputs, dim=1)
         print("\nPredictions:", predictions.numpy())
     return [predictions[0].item(),data_list[1], data_list[0]]
 
 
-def model_start():
+def model_start() -> list:
     list_data=main()
     return list_data
+
+
 
