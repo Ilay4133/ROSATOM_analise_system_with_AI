@@ -4,7 +4,8 @@ import pytz
 from backend.ai_model import model_start
 
 
-def create_db_table(db_path='filters.db'):
+
+def create_db_table(db_path='C:/Users/artem/PycharmProjects/PythonProject/backend/filters.db'):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS filter_data
@@ -19,17 +20,19 @@ def create_db_table(db_path='filters.db'):
     conn.close()
 
 
-def save_to_db(data, db_path='filters.db'):
+def save_to_db(data, db_path='C:/Users/artem/PycharmProjects/PythonProject/backend/filters.db') -> list:
     filter_status: str =""
     timestamp = datetime.now(pytz.timezone('Europe/Kaliningrad')).strftime('%Y-%m-%d %H:%M:%S')
-    delta_in: int =data[1]-4998
-    if delta_in<=0:
+    if data[1]==0:
         filter_status="100%"
-    elif delta_in > 0 and delta_in < 5000:
-        con=delta_in/10000*100
+        int_filter_status: int = 100
+    elif data[1]==1:
+        con = (1 - (data[3]-5000)/5000) * 100
         filter_status=str(con)+"%"
-    elif delta_in>5000:
+        int_filter_status: int = int(con)
+    elif data[1]==2:
         filter_status="0%"
+        int_filter_status: int = 0
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
 
@@ -37,29 +40,29 @@ def save_to_db(data, db_path='filters.db'):
                  (filter_number, status_int, status_text, flow, delta_pressure, timestamp)
                  VALUES (?, ?, ?, ?, ?, ?)''',
               (data[0],data[1],filter_status, data[2],data[3], timestamp))
-
     conn.commit()
     conn.close()
     print("Данные успешно сохранены в базу данных")
+    return [data[1],int_filter_status, data[2],data[3], timestamp]
 
-def save_to_database():
+def save_to_database() -> list:
     create_db_table()
     data_list_db=model_start()
-    test_data = [
+    data = [
         1739127850170,
         data_list_db[0],
         data_list_db[1],
         data_list_db[2]
     ]
-    save_to_db(test_data)
+    filter_values=save_to_db(data)
 
-    conn = sqlite3.connect('filters.db')
+    conn = sqlite3.connect('C:/Users/artem/PycharmProjects/PythonProject/backend/filters.db')
     c = conn.cursor()
     c.execute("SELECT * FROM filter_data")
     print("\nСодержимое базы данных:")
     for row in c.fetchall():
         print(row)
     conn.close()
-    return 0
+    return filter_values
 
-save_to_database()
+
