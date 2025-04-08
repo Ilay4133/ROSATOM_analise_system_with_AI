@@ -1,4 +1,5 @@
-import flet as ft
+import ftplib
+
 from frontend.filter_page_elements import *
 from backend.database import *
 from frontend.filters_seting_elements import *
@@ -11,7 +12,7 @@ def main(page: ft.Page):
     page.title="Моя АЭС"
     page.theme_mode=ft.ThemeMode.DARK
     page.bgcolor='#03050F'
-    page.window.height=852
+    page.window.height=872
     page.window.width=393
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -47,6 +48,38 @@ def main(page: ft.Page):
         filter_analise_column.visible = False
         page.update()
 
+    def open_dop_filter_inf(e):
+        flow_stack.visible = False
+        filter_qu_stack.visible = False
+        filter_temp_usin_stack.visible = False
+        filter_performance_stack.visible = False
+        pressure_inf_but_cont.height = 590
+        pressure_inf_but_cont.bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1')
+        all_filtres_cong_column.visible = False
+        page.update()
+
+    def close_dop_filter_inf(e):
+        flow_stack.visible = True
+        filter_qu_stack.visible = True
+        filter_temp_usin_stack.visible = True
+        filter_performance_stack.visible = True
+        pressure_inf_but_cont.height = 146
+        pressure_inf_but_cont.bgcolor = None
+        all_filtres_cong_column.visible=True
+        page.update()
+
+
+    def get_worker_help(e):
+        dlg_get_worker_help=ft.AlertDialog(
+            title=ft.Column(controls=[ft.Text(value="Работник вызван",color='#ffffff',
+                                    font_family='Manrope',size=25,weight=ft.FontWeight.W_700),
+                                      ft.Text(value="Вам придет уведомление\nо завершении проверки", color='#ffffff',
+                                              font_family='Manrope', size=17, weight=ft.FontWeight.W_500)
+                                      ]),bgcolor='#013DFD'
+        )
+        send_mail_need_help()
+        page.open(dlg_get_worker_help)
+        page.update()
 
     def get_values_from_backend():
         while True:
@@ -112,8 +145,8 @@ def main(page: ft.Page):
             tm.sleep(10)
             '''
             tm.sleep(x) - настройка, как часто
-            будет проходить анализ фильтра 
-            в x секундах
+            будет проходить анализ фильтра,
+            каждые х секунды
             '''
 
     filter1_list_tile = ft.ElevatedButton(content=filter1_but_cont,bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
@@ -125,14 +158,79 @@ def main(page: ft.Page):
 
     return_to_filtres_icon_but=ft.IconButton(icon=ft.Icons.KEYBOARD_RETURN_ROUNDED,icon_size=30,icon_color='#00A5FF',
                                              on_click=back_to_filters)
-    return_to_filtres_icon_but_cont=ft.Container(content=return_to_filtres_icon_but,width=341,bgcolor=None,
+    return_to_filtres_icon_but_cont=ft.Container(content=return_to_filtres_icon_but,width=30,bgcolor=None,
                                                  alignment=ft.Alignment(-1,0))
 
+    pressure_inf_but = ft.ElevatedButton(content=pressure_inf_stack, height=146, width=341,
+                                         bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                         on_click=open_dop_filter_inf,on_long_press=close_dop_filter_inf)
 
-    all_filters_info_column = ft.Column(controls=[filter_name_cont,pressure_inf_but,
+    problem_solving_options_text=ft.Text(value="Варианты решения проблемы",color='#ffffff',
+                                    font_family='Manrope',size=20,weight=ft.FontWeight.W_500)
+
+    problem_solving_text = ft.Text(value="• Провести регулярные проверки\n"
+                                         "фильтров на наличие загрязнений и\n"
+                                         "износа.\n"
+                                         "• Оценить производительность насосов\n"
+                                         "и их соответствие требованиям\n"
+                                         "системы. \n"
+                                         "• Убедиться в отсутствии утечек в\n"
+                                         "системе, которые могут влиять на\n"
+                                         "давление.",
+                                   color='#ffffff',
+                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_200)
+
+    diapozons = ft.Text(value="Диапазоны", color='#ffffff',font_family='Manrope',
+                        size=20, weight=ft.FontWeight.W_500)
+    diapozons_row=ft.Row(controls=[diapozons],width=306)
+
+    normal_pressure_val_text = ft.Text(value="Норма", color='#ffffff',
+                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    normal_pressure_val = ft.Text(value="5000-10000", color='#ffffff',
+                                       font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    normal_pressure_row=ft.Row(controls=[normal_pressure_val_text,normal_pressure_val],spacing=170,width=306)
+
+    min_pressure_val_text = ft.Text(value="Минимальное", color='#ffffff',
+                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    min_pressure_val = ft.Text(value="5000", color='#ffffff',
+                                    font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    min_pressure_row = ft.Row(controls=[min_pressure_val_text, min_pressure_val], spacing=165, width=306)
+
+    max_pressure_val_text = ft.Text(value="Максимальное", color='#ffffff',
+                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    max_pressure_val = ft.Text(value="более 10000", color='#ffffff',
+                                    font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
+    max_pressure_row = ft.Row(controls=[max_pressure_val_text, max_pressure_val], spacing=105, width=306)
+
+    get_worker_help_but_img=ft.Image(src='C:/Users/artem/PycharmProjects/PythonProject/get_worker_helo_but.png',
+                                     height=46,width=330, fit=ft.ImageFit.FILL)
+    get_worker_help_but=ft.ElevatedButton(content=get_worker_help_but_img,height=46,width=301,
+                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                          bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          on_click=get_worker_help)
+
+
+    pressure_inf_column=ft.Column(controls=[pressure_inf_but,problem_solving_options_text,
+                                            problem_solving_text,diapozons_row,
+                                            normal_pressure_row,
+                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff')),
+                                            min_pressure_row,
+                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff')),
+                                            max_pressure_row,
+                                            ft.Divider(color=None),
+                                  get_worker_help_but],spacing=3,
+                                  horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+
+    pressure_inf_but_cont=ft.Container(content=pressure_inf_column, height=146, width=341,border_radius=10)
+
+    all_filters_info_column = ft.Column(controls=[
+                ft.Row(controls=[return_to_filtres_icon_but_cont,filter_name_cont],
+                       spacing=20,width=360)
+        ,pressure_inf_but_cont,
                             ft.Row(controls=[flow_stack, filter_qu_stack]),
                             ft.Row(controls=[filter_temp_usin_stack,filter_performance_stack]),
-                            return_to_filtres_icon_but_cont],
+                            all_filtres_cong_column],
                                         horizontal_alignment=ft.CrossAxisAlignment.START,spacing=20)
     filter_info_cont = ft.Container(content=all_filters_info_column)
 
@@ -166,11 +264,18 @@ def main(page: ft.Page):
                          height=846, width=393, fit=ft.ImageFit.CONTAIN)
 
     all_page_stack=ft.Stack(controls=[page_bg_img,all_page_cont])
-    page.add(all_page_stack)
+
+    qu_icon_but=ft.IconButton(icon=ft.Icons.QUESTION_MARK_ROUNDED,bgcolor='#3A4EB1',
+                              icon_size=30, icon_color='#030264')
+    qu_icon_but_cont=ft.Container(content=qu_icon_but, height=74,width=74,
+                                  padding=ft.Padding(top=0,bottom=20,left=10,right=10))
+
+    all_all_page_stack=ft.Stack(controls=[all_page_stack,qu_icon_but_cont],alignment=ft.Alignment(1,1))
+
+    page.add(all_all_page_stack)
     page.update()
     close_user_filter_analise(1)
     back_to_filters(1)
     get_values_from_backend()
 
 ft.app(target=main)
-
