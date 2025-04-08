@@ -18,5 +18,5 @@ filter_stat_user_analise_text=ft.Text(value="Состояние фильтра: 
                           weight=ft.FontWeight.W_600)
 filter_stat_user_analise_text_cont=ft.Container(content=filter_stat_user_analise_text,
                                                 bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
-                                                height=60,width=345,border_radius=10,
+                                                height=80,width=345,border_radius=10,
                                          padding=ft.Padding(top=15,left=15,bottom=15,right=15))
