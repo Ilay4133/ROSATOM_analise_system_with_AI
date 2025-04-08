@@ -31,15 +31,12 @@ pressure_inf_cont=ft.Container(content=pressure_inf_row,height=146,width=341,
                                alignment=ft.Alignment(-1,-1))
 
 graf_pressure_img=ft.Image(src="C:/Users/artem/PycharmProjects/PythonProject/ef4cb256-a19f-47c7-af0c-9ae0f23b0e8b-Photoroom.png",
-                           width=311,height=88,fit=ft.ImageFit.COVER)
+                           width=311,height=88,fit=ft.ImageFit.CONTAIN)
 
-graf_pressure_img_cont=ft.Container(content=graf_pressure_img,height=146,width=341)
+graf_pressure_img_cont=ft.Container(content=graf_pressure_img,height=146,width=341,
+                                    alignment=ft.Alignment(0,1))
 
 pressure_inf_stack=ft.Stack(controls=[pressure_inf_cont,graf_pressure_img_cont],alignment=ft.Alignment(0,1))
-
-pressure_inf_but=ft.ElevatedButton(content=pressure_inf_stack,height=146,width=341,
-                                   bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
-                                   style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)))
 
 
 flow_inf_text_cont_info=ft.Text(value="no data",color='#ffffff',font_family='Manrope',size=20,
@@ -113,6 +110,32 @@ filter_performance_value_variability_cont=ft.Container(content=filter_performanc
                                          alignment=ft.Alignment(1,1))
 filter_performance_stack=ft.Stack(controls=[filter_performance_column_cont,filter_performance_value_variability_cont],
                     alignment=ft.Alignment(1,1))
+
+
+
+srok_using_text=ft.Text(value="Срок использования",color='#ffffff',font_family='Manrope',size=20,
+                          weight=ft.FontWeight.W_500)
+srok_using_val=ft.Text(value="установлен 01.01.2022 (3 года)",color='#ffffff',font_family='Manrope',size=15,
+                          weight=ft.FontWeight.W_200)
+srok_using_column=ft.Column(controls=[srok_using_text,srok_using_val],
+                            spacing=1)
+
+filter_place_text=ft.Text(value="Место расположения",color='#ffffff',font_family='Manrope',size=20,
+                          weight=ft.FontWeight.W_500)
+filter_place_val=ft.Text(value="Сектор B",color='#ffffff',font_family='Manrope',size=15,
+                          weight=ft.FontWeight.W_200)
+filter_place_column=ft.Column(controls=[filter_place_text,filter_place_val],
+                              spacing=1)
+
+filtering_method_text=ft.Text(value="Метод очистки",color='#ffffff',font_family='Manrope',size=20,
+                          weight=ft.FontWeight.W_500)
+filtering_method_val=ft.Text(value="дистилляция",color='#ffffff',font_family='Manrope',size=15,
+                          weight=ft.FontWeight.W_200)
+filtering_method_column=ft.Column(controls=[filtering_method_text,filtering_method_val],
+                                  spacing=1)
+
+all_filtres_cong_column=ft.Column(controls=[srok_using_column,filter_place_column,filtering_method_column])
+
 
 
 
