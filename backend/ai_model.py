@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 import os
+from backend.math_model_analise import *
 
 
 class FilterDataset(Dataset):
@@ -57,7 +58,7 @@ def load_model(model, optimizer=None, path="filter_model"):
     return False
 
 
-def train_model(model, dataloader, criterion, optimizer, epochs=10):
+def train_model(model, dataloader, criterion, optimizer, epochs=20):
     model.train()
     for epoch in range(epochs):
         total_loss = 0
@@ -82,30 +83,32 @@ def train_model(model, dataloader, criterion, optimizer, epochs=10):
 
 
 def main():
-    df = pd.read_csv("data.csv")  
+    df = pd.read_csv("C:/Users/artem/PycharmProjects/PythonProject/data.csv")
 
     dataset = FilterDataset(df[['Value1', 'Value2', 'Empty']])
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-    # Инициализация модели
     model = FilterConditionModel(num_classes=3)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # Загрузка сохраненной модели
     if not load_model(model, optimizer):
         print("Training new model...")
         model = train_model(model, dataloader, criterion, optimizer, epochs=20)
         save_model(model, optimizer)
 
-    # Пример предсказания
+    data_list = start_api()
+    print(data_list)
     model.eval()
-    test_data = torch.tensor([[5.5, 100.0], [12.0, 85.0]], dtype=torch.float32)
+    test_data = torch.tensor([data_list], dtype=torch.float32)
     with torch.no_grad():
         outputs = model(test_data)
         predictions = torch.argmax(outputs, dim=1)
         print("\nPredictions:", predictions.numpy())
+    return [predictions[0].item(),data_list[1], data_list[0]]
 
 
-if __name__ == "__main__":
-    main()
+def model_start():
+    list_data=main()
+    return list_data
+
