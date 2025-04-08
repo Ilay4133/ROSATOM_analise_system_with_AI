@@ -1,0 +1,65 @@
+import sqlite3
+from datetime import datetime
+import pytz
+from backend.ai_model import model_start
+
+
+def create_db_table(db_path='filters.db'):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS filter_data
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  filter_number INTEGER,
+                  status_int INTEGER,
+                  status_text TEXT,
+                  flow REAL,
+                  delta_pressure REAL,
+                  timestamp DATETIME)''')
+    conn.commit()
+    conn.close()
+
+
+def save_to_db(data, db_path='filters.db'):
+    filter_status: str =""
+    timestamp = datetime.now(pytz.timezone('Europe/Kaliningrad')).strftime('%Y-%m-%d %H:%M:%S')
+    delta_in: int =data[1]-4998
+    if delta_in<=0:
+        filter_status="100%"
+    elif delta_in > 0 and delta_in < 5000:
+        con=delta_in/10000*100
+        filter_status=str(con)+"%"
+    elif delta_in>5000:
+        filter_status="0%"
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+
+    c.execute('''INSERT INTO filter_data
+                 (filter_number, status_int, status_text, flow, delta_pressure, timestamp)
+                 VALUES (?, ?, ?, ?, ?, ?)''',
+              (data[0],data[1],filter_status, data[2],data[3], timestamp))
+
+    conn.commit()
+    conn.close()
+    print("Данные успешно сохранены в базу данных")
+
+def save_to_database():
+    create_db_table()
+    data_list_db=model_start()
+    test_data = [
+        1739127850170,
+        data_list_db[0],
+        data_list_db[1],
+        data_list_db[2]
+    ]
+    save_to_db(test_data)
+
+    conn = sqlite3.connect('filters.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM filter_data")
+    print("\nСодержимое базы данных:")
+    for row in c.fetchall():
+        print(row)
+    conn.close()
+    return 0
+
+save_to_database()
