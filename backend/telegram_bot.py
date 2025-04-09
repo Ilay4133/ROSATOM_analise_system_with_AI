@@ -1,8 +1,9 @@
 from telegram import Bot
 import asyncio
+
+# Конфигурация
 TOKEN = "8189040421:AAGr_Y32jcTxuR4qLTN3sPzYfdqEewkEPxI"
 CHAT_ID = "5164380779"
-
 
 def send_metrics(pressure: float, flow: float, filter_status: float):
 
@@ -31,7 +32,7 @@ def send_mail_need_help():
         bot = Bot(token=TOKEN)
         message = (
             "🚨 *Пользователь вызвал работника*\n\n"
-            f"• *Пользователю требуется помощь работника на фильтре №1 сектра B"
+            f"• *Пользователю требуется помощь работника на фильтре №1 сектора B*"
         )
         await bot.send_message(
             chat_id=CHAT_ID,
