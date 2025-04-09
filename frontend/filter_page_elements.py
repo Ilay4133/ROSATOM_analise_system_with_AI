@@ -1,8 +1,5 @@
 import flet as ft
 
-
-
-
 filter_info_cont=ft.Container(content=None,width=341,height=436)
 
 
