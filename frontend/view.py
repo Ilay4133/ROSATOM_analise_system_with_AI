@@ -142,22 +142,22 @@ def main(page: ft.Page):
                 filter_pressure_val = int(filter_pressure_text_field.value)
                 if filter_pressure_val <= 5000:
                     filter_status = "100%"
-                    flow_user_analise_text.value="Поток: 242 кг/с"
+                    flow_user_analise_text.value=f"Поток:{filter_pressure_val*0.0485} кг/с"
                     filter_stat_user_analise_text.value="Состояние фильтра: " + filter_status
                     flow_user_analise_text_cont.bgcolor = '#00A5FF'
                     filter_stat_user_analise_text_cont.bgcolor = '#00A5FF'
 
-                elif filter_pressure_val > 500 and filter_pressure_val < 10000:
+                elif filter_pressure_val > 5000 and filter_pressure_val < 10000:
                     con = (1 - (filter_pressure_val - 5000) / 5000) * 100
                     filter_status = str(con) + "%"
-                    flow_user_analise_text.value = "Поток: 241 кг/с"
+                    flow_user_analise_text.value=f"Поток:{242.5-filter_pressure_val*0.00003} кг/с"
                     filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
                     flow_user_analise_text_cont.bgcolor = '#C5671F'
                     filter_stat_user_analise_text_cont.bgcolor = '#C5671F'
 
                 elif filter_pressure_val >= 10000:
                     filter_status = "0%"
-                    flow_user_analise_text.value = "Поток: 239 кг/с"
+                    flow_user_analise_text.value=f"Поток:{242.5-filter_pressure_val*0.00003} кг/с"
                     filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
                     flow_user_analise_text_cont.bgcolor='#AF0D0D'
                     filter_stat_user_analise_text_cont.bgcolor='#AF0D0D'
