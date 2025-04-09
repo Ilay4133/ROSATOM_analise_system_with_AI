@@ -11,7 +11,7 @@ model = app.get_exploration_model(project, t_interval)
 variables = pd.Series({'DN1000' : 1, 'DN600x17': 0.596, 'TANKPRESS':1e5, 'AREA_FITTING_23V1':0.13900896800234608,
                        'DN600x25': 0.58, 'HOLEAREADESIGN': 0.005281017250684443, 'DN300x13': 0.299,
                        'ROD_POSITION': 1, 'DIAMETER_FITTING_23V2': 0.27075712741610936,
-                       'FILTER_RESIST_COEFF':76.15303122952462,'DIAMETER_FITTING_123':0.5459261228146222,
+                       'FILTER_RESIST_COEFF':39.15303122952462,'DIAMETER_FITTING_123':0.5459261228146222,
                        'SATURATED_PRESSURE': 90.945e3, 'DN800x9':0.802,'WATER_DENSITY':960,
                        'TANKTEMP':97}, dtype = float)
 
