@@ -1,5 +1,8 @@
 import flet as ft
 
+
+
+
 filter_info_cont=ft.Container(content=None,width=341,height=436)
 
 
@@ -19,9 +22,9 @@ filter_performance_inf=ft.Text(value="Производи\nтельность ",c
 
 pressure_inf_text_cont_info=ft.Text(value="5 кПа",color='#ffffff',font_family='Manrope',size=20,
                           weight=ft.FontWeight.W_700)
-pressure_inf_text_cont=ft.Container(content=pressure_inf_text_cont_info,width=76,height=26,
+pressure_inf_text_cont=ft.Container(content=pressure_inf_text_cont_info,width=95,height=26,
                                     border_radius=5, bgcolor='#00A5FF',alignment=ft.Alignment(0,-1))
-pressure_inf_row=ft.Row(controls=[pressure_inf_text,pressure_inf_text_cont],spacing=130)
+pressure_inf_row=ft.Row(controls=[pressure_inf_text,pressure_inf_text_cont],spacing=110)
 pressure_inf_cont=ft.Container(content=pressure_inf_row,height=146,width=341,
 
                                   padding=ft.Padding(left=14,bottom=14,right=14,top=14),border_radius=10,
