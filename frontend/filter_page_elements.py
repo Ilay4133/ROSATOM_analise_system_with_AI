@@ -1,10 +1,6 @@
 import flet as ft
 
-
-
-
 filter_info_cont=ft.Container(content=None,width=341,height=436)
-
 
 pressure_inf_text=ft.Text(value="Давление",color='#ffffff',font_family='Manrope',size=20,
                        weight=ft.FontWeight.W_500)
@@ -110,8 +106,6 @@ filter_performance_value_variability_cont=ft.Container(content=filter_performanc
                                          alignment=ft.Alignment(1,1))
 filter_performance_stack=ft.Stack(controls=[filter_performance_column_cont,filter_performance_value_variability_cont],
                     alignment=ft.Alignment(1,1))
-
-
 
 srok_using_text=ft.Text(value="Срок использования",color='#ffffff',font_family='Manrope',size=20,
                           weight=ft.FontWeight.W_500)
