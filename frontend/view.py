@@ -136,8 +136,8 @@ def main(page: ft.Page):
     def get_values_from_backend():
         while True:
             filter_values=save_to_database()
-            pressure_inf_text_cont_info.value = str(int(filter_values[3]) // 1000)+" кПа"
-            filter1_qu_text.value = str(int(filter_values[3]) // 1000) + " кПа"
+            pressure_inf_text_cont_info.value = str(int(filter_values[3]) // 1)+" Па"
+            filter1_qu_text.value = str(int(filter_values[3]) // 1) + " Па"
             if filter_pressure_text_field.value !='':
                 filter_pressure_val = int(filter_pressure_text_field.value)
                 if filter_pressure_val <= 5000:
@@ -163,11 +163,11 @@ def main(page: ft.Page):
                     filter_stat_user_analise_text_cont.bgcolor='#AF0D0D'
 
             if filter_values[3]<5000:
-                pressure_inf_text_cont_info.value = "5" + " кПа"
-                filter1_qu_text.value = "5" + " кПа"
+                pressure_inf_text_cont_info.value = "5000" + " Па"
+                filter1_qu_text.value = "5000" + " Па"
             else:
-                pressure_inf_text_cont_info.value = str(int(filter_values[3]) // 1000) + " кПа"
-                filter1_qu_text.value = str(int(filter_values[3]) // 1000) + " кПа"
+                pressure_inf_text_cont_info.value = str(int(filter_values[3]) //1) + " Па"
+                filter1_qu_text.value = str(int(filter_values[3]) //1) + " Па"
 
             if int(filter_values[3])>5000 and int(filter_values[3])<10000:
                 send_metrics(
