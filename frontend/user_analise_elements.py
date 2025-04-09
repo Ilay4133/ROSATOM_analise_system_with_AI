@@ -1,6 +1,6 @@
 import flet as ft
 
-filter_pressure_text_field=ft.TextField(value='',label="Разница давдений (Па)",label_style=ft.TextStyle(color='#ffffff'),
+filter_pressure_text_field=ft.TextField(value='',label="Разница давлений (Па)",label_style=ft.TextStyle(color='#ffffff'),
                                             width=345,cursor_color='#ffffff',border_radius=10,
                                             text_style=ft.TextStyle(color='#ffffff',size=18),
                                             border_width=2,selection_color='#0f74ab',cursor_width=4,
