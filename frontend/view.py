@@ -57,8 +57,12 @@ def main(page: ft.Page):
         filter_qu_stack.visible = False
         filter_temp_usin_stack.visible = False
         filter_performance_stack.visible = False
-        pressure_inf_but_cont.height = 590
+        pressure_inf_but_cont.height = 525
         pressure_inf_but_cont.bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1')
+        get_worker_help_but.visible = False
+        if pressure_inf_text_cont.bgcolor=='#AF0D0D':
+            pressure_inf_but_cont.height=590
+            get_worker_help_but.visible = True
         all_filtres_cong_column.visible = False
         page.update()
 
@@ -214,7 +218,7 @@ def main(page: ft.Page):
                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
                                          on_click=open_dop_filter_inf,on_long_press=close_dop_filter_inf)
 
-    problem_solving_options_text=ft.Text(value="Варианты решения проблемы",color='#ffffff',
+    problem_solving_recomend_text=ft.Text(value="Рекомендации",color='#ffffff',
                                     font_family='Manrope',size=20,weight=ft.FontWeight.W_500)
 
     problem_solving_text = ft.Text(value="• Провести регулярные проверки\n"
@@ -226,8 +230,8 @@ def main(page: ft.Page):
                                          "• Убедиться в отсутствии утечек в\n"
                                          "системе, которые могут влиять на\n"
                                          "давление.",
-                                   color='#ffffff',
-                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_200)
+                                   color=ft.colors.with_opacity(0.8, '#ffffff'),
+                                      font_family='Manrope', size=15, weight=ft.FontWeight.W_300)
 
     diapozons = ft.Text(value="Диапазоны", color='#ffffff',font_family='Manrope',
                         size=20, weight=ft.FontWeight.W_500)
@@ -251,31 +255,34 @@ def main(page: ft.Page):
                                     font_family='Manrope', size=15, weight=ft.FontWeight.W_400)
     max_pressure_row = ft.Row(controls=[max_pressure_val_text, max_pressure_val], spacing=105, width=306)
 
-    get_worker_help_but_img=ft.Image(src='C:/Users/artem/PycharmProjects/PythonProject/get_worker_helo_but.png',
-                                     height=46,width=330, fit=ft.ImageFit.FILL)
-    get_worker_help_but=ft.ElevatedButton(content=get_worker_help_but_img,height=46,width=301,
+    get_worker_help_but_text=ft.Text(value="Вызвать работника", color='#ffffff',
+                                    font_family='Manrope', size=25, weight=ft.FontWeight.W_700)
+    get_worker_help_but=ft.ElevatedButton(content=get_worker_help_but_text,height=46,width=301,
                                           style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
-                                          bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          bgcolor='#013DFD',
                                           on_click=get_worker_help)
 
 
-    pressure_inf_column=ft.Column(controls=[pressure_inf_but,problem_solving_options_text,
-                                            problem_solving_text,diapozons_row,
+    pressure_inf_column=ft.Column(controls=[pressure_inf_but,diapozons_row,
                                             normal_pressure_row,
-                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff')),
+                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff'),
+                                                       height=3,thickness=1),
                                             min_pressure_row,
-                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff')),
+                                            ft.Divider(color=ft.colors.with_opacity(0.23, '#ffffff'),
+                                                       height=3,thickness=1),
                                             max_pressure_row,
-                                            ft.Divider(color=None),
-                                  get_worker_help_but],spacing=3,
+                                            ft.Row(controls=[problem_solving_recomend_text],width=306),
+                                            problem_solving_text,
+                                            ft.Divider(color=ft.colors.with_opacity(0.5, '#3A4EB1')),
+                                  get_worker_help_but],spacing=5,
                                   horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
     pressure_inf_but_cont=ft.Container(content=pressure_inf_column, height=146, width=341,border_radius=10)
 
     all_filters_info_column = ft.Column(controls=[
                 ft.Row(controls=[return_to_filtres_icon_but_cont,filter_name_cont],
-                       spacing=20,width=360)
-        ,pressure_inf_but_cont,
+                       spacing=20,width=360),
+                            pressure_inf_but_cont,
                             ft.Row(controls=[flow_stack, filter_qu_stack]),
                             ft.Row(controls=[filter_temp_usin_stack,filter_performance_stack]),
                             all_filtres_cong_column],
@@ -366,3 +373,5 @@ def main(page: ft.Page):
     all_close()
 
 ft.app(target=main)
+
+#42kem_ra_x009017
