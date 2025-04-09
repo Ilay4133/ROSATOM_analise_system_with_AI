@@ -6,6 +6,7 @@ from frontend.filters_seting_elements import *
 import time as tm
 from backend.telegram_bot import *
 from frontend.user_analise_elements import *
+from frontend.start_page_elements import *
 
 
 def main(page: ft.Page):
@@ -21,6 +22,7 @@ def main(page: ft.Page):
         "Manrope": "C:/Users/artem/PycharmProjects/PythonProject/Manrope-VariableFont_wght.ttf",
     }
     page.window.resizable = False
+    auth_code="42kem_ra_x009017"
     page.update()
 
     def open_filter1_config(e):
@@ -37,12 +39,14 @@ def main(page: ft.Page):
 
 
     def open_user_filter_analise(e):
+        filter_analise_cont.visible = True
         filters_column.visible = False
         user_filter_analise_but.visible = False
         filter_analise_column.visible = True
         page.update()
 
     def close_user_filter_analise(e):
+        filter_analise_cont.visible = False
         filters_column.visible = True
         user_filter_analise_but.visible = True
         filter_analise_column.visible = False
@@ -65,8 +69,52 @@ def main(page: ft.Page):
         filter_performance_stack.visible = True
         pressure_inf_but_cont.height = 146
         pressure_inf_but_cont.bgcolor = None
-        all_filtres_cong_column.visible=True
+        all_filtres_cong_column.visible = True
         page.update()
+
+    def all_close():
+        qu_icon_but_cont.visible = False
+        logo_container.visible = False
+        filters_column.visible = False
+        filter_info_cont.visible = False
+        user_filter_analise_but.visible = False
+        filter_analise_cont.visible = False
+        cont3_code_auth_place.visible = False
+        page.update()
+
+    def open_code_auth(e):
+        start_logo_but_cont.visible = False
+        logo_container.visible = True
+        cont3_code_auth_place.visible = True
+        page.update()
+
+    def open_all():
+        qu_icon_but_cont.visible = True
+        filters_column.visible = True
+        cont3_code_auth_place.visible = False
+        user_filter_analise_but.visible = True
+        get_values_from_backend()
+        page.update()
+
+
+    def code_auth(e):
+        code_val=input_code_text_field.value
+        if code_val==auth_code:
+            open_all()
+            page.update()
+        else:
+            dlg_get_worker_help = ft.AlertDialog(
+                title=ft.Column(controls=[ft.Text(value="Неверный код", color='#ffffff',
+                                          font_family='Manrope', size=25, weight=ft.FontWeight.W_700),
+                                          ft.Text(value="Повторите попытку\nвхода",
+                                          color='#ffffff',
+                                          font_family='Manrope', size=17, weight=ft.FontWeight.W_500)
+                                          ]), bgcolor='#013DFD'
+            )
+            page.open(dlg_get_worker_help)
+            page.update()
+
+
 
 
     def get_worker_help(e):
@@ -250,9 +298,48 @@ def main(page: ft.Page):
     filter_analise_column=ft.Column(controls=[filter_pressure_text_field,
                                               flow_user_analise_text_cont,filter_stat_user_analise_text_cont,
                                               return_to_filtres_icon_but_cont_from_analise])
-    filter_analise_cont=ft.Container(content=filter_analise_column,)
+    filter_analise_cont=ft.Container(content=filter_analise_column)
 
-    all_page_filters_column=ft.Column(controls=[logo_container,filters_column,
+    start_logo_but = ft.ElevatedButton(content=start_page_logo,
+                                       style=ft.ButtonStyle(
+                                           bgcolor=ft.colors.TRANSPARENT,
+                                           shadow_color=ft.colors.TRANSPARENT,
+                                           surface_tint_color=ft.colors.TRANSPARENT,
+                                           overlay_color=ft.colors.TRANSPARENT,
+                                           elevation=0), on_click=open_code_auth)
+
+    code_auth_icon_but = ft.IconButton(icon=ft.Icons.ARROW_FORWARD_IOS_ROUNDED,
+                                       icon_color='#ffffff', icon_size=24,
+                                       on_click=code_auth)
+
+    code_auth_row=ft.Row(controls=[input_code_text_field,code_auth_icon_but])
+
+    cont1_code_auth = ft.Container(
+        content=code_auth_row,
+        height = 52, width = 301,
+        bgcolor=ft.colors.TRANSPARENT,
+        border=ft.border.all(
+            width=1,
+            color=ft.colors.with_opacity(0.5, '#ffffff')
+        ),
+        border_radius=10,
+        padding=10, alignment=ft.Alignment(0,0))
+
+    cont2_code_auth=ft.Container(
+        content=cont1_code_auth,
+        height=79, width=341,
+        bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+        border_radius=10,
+        alignment=ft.Alignment(0,0)
+    )
+    cont3_code_auth_place=ft.Container(content=cont2_code_auth,height=800,width=393,
+                                       alignment=ft.Alignment(0, -0.2)
+                                       )
+
+    start_logo_but_cont=ft.Container(content=start_logo_but,height=872,width=393,
+                                     alignment=ft.Alignment(0,-0.25))
+
+    all_page_filters_column=ft.Column(controls=[start_logo_but_cont,logo_container,cont3_code_auth_place,filters_column,
                                                 filter_info_cont,user_filter_analise_but,filter_analise_cont],
                                       horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                              alignment=ft.MainAxisAlignment.CENTER)
@@ -276,6 +363,6 @@ def main(page: ft.Page):
     page.update()
     close_user_filter_analise(1)
     back_to_filters(1)
-    get_values_from_backend()
+    all_close()
 
 ft.app(target=main)
