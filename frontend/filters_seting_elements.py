@@ -49,9 +49,6 @@ filter3_but_cont=ft.Row(controls=[filter3_name_text, filter_qu3_cont],spacing=14
 filter4_but_cont=ft.Row(controls=[filter4_name_text, filter_qu4_cont],spacing=140)
 filter5_but_cont=ft.Row(controls=[filter5_name_text, filter_qu5_cont],spacing=140)
 
-
-
-
 filter2_list_tile = ft.ElevatedButton(content=filter2_but_cont,bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
                                           style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
                                           height=46,width=341)
