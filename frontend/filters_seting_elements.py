@@ -12,13 +12,13 @@ all_filters_text_cont=ft.Container(content=all_filters_text,alignment=ft.Alignme
 
 filter1_qu_text=ft.Text(value="no data",color='#ffffff',font_family='Manrope',size=15,
                        weight=ft.FontWeight.W_700)
-filter2_qu_text=ft.Text(value="5 кПа",color='#ffffff',font_family='Manrope',size=15,
+filter2_qu_text=ft.Text(value="5000 Па",color='#ffffff',font_family='Manrope',size=15,
                        weight=ft.FontWeight.W_700)
-filter3_qu_text=ft.Text(value="7 кПа",color='#ffffff',font_family='Manrope',size=15,
+filter3_qu_text=ft.Text(value="7500 Па",color='#ffffff',font_family='Manrope',size=15,
                        weight=ft.FontWeight.W_700)
-filter4_qu_text=ft.Text(value="10 кПа",color='#ffffff',font_family='Manrope',size=15,
+filter4_qu_text=ft.Text(value="11600 Па",color='#ffffff',font_family='Manrope',size=15,
                        weight=ft.FontWeight.W_700)
-filter5_qu_text=ft.Text(value="5 кПа",color='#ffffff',font_family='Manrope',size=15,
+filter5_qu_text=ft.Text(value="5000 Па",color='#ffffff',font_family='Manrope',size=15,
                        weight=ft.FontWeight.W_700)
 
 filter1_name_text=ft.Text(value="Фильтр №1",color='#ffffff',font_family='Manrope',size=16,
@@ -32,15 +32,15 @@ filter4_name_text=ft.Text(value="Фильтр №4",color='#ffffff',font_family=
 filter5_name_text=ft.Text(value="Фильтр №5",color='#ffffff',font_family='Manrope',size=16,
                           weight=ft.FontWeight.W_300)
 
-filter_qu1_cont=ft.Container(content=filter1_qu_text,bgcolor='#00A5FF',height=26,width=89,
+filter_qu1_cont=ft.Container(content=filter1_qu_text,bgcolor='#00A5FF',height=26,width=95,
                             alignment=ft.alignment.center,border_radius=5)
-filter_qu2_cont=ft.Container(content=filter2_qu_text,bgcolor='#00A5FF',height=26,width=89,
+filter_qu2_cont=ft.Container(content=filter2_qu_text,bgcolor='#00A5FF',height=26,width=95,
                             alignment=ft.alignment.center,border_radius=5)
-filter_qu3_cont=ft.Container(content=filter3_qu_text,bgcolor='#C5671F',height=26,width=89,
+filter_qu3_cont=ft.Container(content=filter3_qu_text,bgcolor='#C5671F',height=26,width=95,
                             alignment=ft.alignment.center,border_radius=5)
-filter_qu4_cont=ft.Container(content=filter4_qu_text,bgcolor='#AF0D0D',height=26,width=89,
+filter_qu4_cont=ft.Container(content=filter4_qu_text,bgcolor='#AF0D0D',height=26,width=95,
                             alignment=ft.alignment.center,border_radius=5)
-filter_qu5_cont=ft.Container(content=filter5_qu_text,bgcolor='#00A5FF',height=26,width=89,
+filter_qu5_cont=ft.Container(content=filter5_qu_text,bgcolor='#00A5FF',height=26,width=95,
                             alignment=ft.alignment.center,border_radius=5)
 
 filter1_but_cont=ft.Row(controls=[filter1_name_text, filter_qu1_cont],spacing=140)
@@ -48,6 +48,7 @@ filter2_but_cont=ft.Row(controls=[filter2_name_text, filter_qu2_cont],spacing=14
 filter3_but_cont=ft.Row(controls=[filter3_name_text, filter_qu3_cont],spacing=140)
 filter4_but_cont=ft.Row(controls=[filter4_name_text, filter_qu4_cont],spacing=140)
 filter5_but_cont=ft.Row(controls=[filter5_name_text, filter_qu5_cont],spacing=140)
+
 
 filter2_list_tile = ft.ElevatedButton(content=filter2_but_cont,bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
                                           style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
