@@ -20,7 +20,7 @@ filter_performance_inf=ft.Text(value="Производи\nтельность ",c
                        weight=ft.FontWeight.W_500)
 
 
-pressure_inf_text_cont_info=ft.Text(value="5 кПа",color='#ffffff',font_family='Manrope',size=20,
+pressure_inf_text_cont_info=ft.Text(value="no data",color='#ffffff',font_family='Manrope',size=20,
                           weight=ft.FontWeight.W_700)
 pressure_inf_text_cont=ft.Container(content=pressure_inf_text_cont_info,width=95,height=26,
                                     border_radius=5, bgcolor='#00A5FF',alignment=ft.Alignment(0,-1))
