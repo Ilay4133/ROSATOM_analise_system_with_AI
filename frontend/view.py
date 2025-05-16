@@ -1,13 +1,14 @@
-import ftplib
 
-from frontend.filter_page_elements import *
-from backend.database import *
-from frontend.filters_seting_elements import *
+import threading
+from rosatom_project.frontend.filter_page_elements import *
+from rosatom_project.backend.database import *
+from rosatom_project.frontend.filters_seting_elements import *
 import time as tm
-from backend.telegram_bot import *
-from frontend.user_analise_elements import *
-from frontend.start_page_elements import *
-
+from rosatom_project.backend.telegram_bot import *
+from rosatom_project.frontend.user_analise_elements import *
+from rosatom_project.frontend.start_page_elements import *
+from rosatom_project.backend.matplotlib_graph import *
+from rosatom_project.frontend.graph_visual_elements import *
 
 def main(page: ft.Page):
     page.title="Моя АЭС"
@@ -19,10 +20,9 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.padding=ft.Padding(left=0,bottom=0,right=0,top=0)
     page.fonts = {
-        "Manrope": "C:/Users/artem/PycharmProjects/PythonProject/Manrope-VariableFont_wght.ttf",
+        "Manrope": "C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/Manrope-VariableFont_wght.ttf",
     }
     page.window.resizable = False
-    auth_code="42kem_ra_x009017"
     page.update()
 
     def open_filter1_config(e):
@@ -97,15 +97,29 @@ def main(page: ft.Page):
         filters_column.visible = True
         cont3_code_auth_place.visible = False
         user_filter_analise_but.visible = True
-        get_values_from_backend()
+        start_threads()
         page.update()
 
 
     def code_auth(e):
         code_val=input_code_text_field.value
-        if code_val==auth_code:
-            open_all()
-            page.update()
+        db = sqlite3.connect("C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/backend/Rosatom.data")
+        cur = db.cursor()
+        cur.execute("SELECT * FROM Rosatom_users")
+        data = cur.fetchall()
+        if any(code_val in tupl for tupl in data):
+            for row in data:
+                if code_val == row[0]:
+                    open_all()
+                    dlg_get_worker_help = ft.AlertDialog(
+                        title=ft.Column(controls=[ft.Text(value=f"Добро пожаловать {row[1]} {row[2]}", color='#ffffff',
+                                                          font_family='Manrope', size=25, weight=ft.FontWeight.W_700),
+                                                  ft.Text(value="Хорошей работы!",
+                                                          color='#ffffff',
+                                                          font_family='Manrope', size=17, weight=ft.FontWeight.W_500)
+                                                  ]), bgcolor='#013DFD')
+                    page.open(dlg_get_worker_help)
+                    page.update()
         else:
             dlg_get_worker_help = ft.AlertDialog(
                 title=ft.Column(controls=[ft.Text(value="Неверный код", color='#ffffff',
@@ -117,6 +131,7 @@ def main(page: ft.Page):
             )
             page.open(dlg_get_worker_help)
             page.update()
+        db.close()
 
 
 
@@ -133,34 +148,11 @@ def main(page: ft.Page):
         page.open(dlg_get_worker_help)
         page.update()
 
-    def get_values_from_backend():
+    def get_values_from_backend1():
         while True:
-            filter_values=save_to_database()
+            filter_values=save_to_database1()
             pressure_inf_text_cont_info.value = str(int(filter_values[3]) // 1)+" Па"
             filter1_qu_text.value = str(int(filter_values[3]) // 1) + " Па"
-            if filter_pressure_text_field.value !='':
-                filter_pressure_val = int(filter_pressure_text_field.value)
-                if filter_pressure_val <= 5000:
-                    filter_status = "100%"
-                    flow_user_analise_text.value=f"Поток:{filter_pressure_val*0.0485} кг/с"
-                    filter_stat_user_analise_text.value="Состояние фильтра: " + filter_status
-                    flow_user_analise_text_cont.bgcolor = '#00A5FF'
-                    filter_stat_user_analise_text_cont.bgcolor = '#00A5FF'
-
-                elif filter_pressure_val > 5000 and filter_pressure_val < 10000:
-                    con = (1 - (filter_pressure_val - 5000) / 5000) * 100
-                    filter_status = str(con) + "%"
-                    flow_user_analise_text.value=f"Поток:{242.5-filter_pressure_val*0.00003} кг/с"
-                    filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
-                    flow_user_analise_text_cont.bgcolor = '#C5671F'
-                    filter_stat_user_analise_text_cont.bgcolor = '#C5671F'
-
-                elif filter_pressure_val >= 10000:
-                    filter_status = "0%"
-                    flow_user_analise_text.value=f"Поток:{242.5-filter_pressure_val*0.00003} кг/с"
-                    filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
-                    flow_user_analise_text_cont.bgcolor='#AF0D0D'
-                    filter_stat_user_analise_text_cont.bgcolor='#AF0D0D'
 
             if filter_values[3]<5000:
                 pressure_inf_text_cont_info.value = "5000" + " Па"
@@ -194,16 +186,67 @@ def main(page: ft.Page):
             flow_inf_text_cont_info.value = str(int(filter_values[2])//1)+" кг/с"
             filter_qu_inf_cont_info.value = str(filter_values[1]//1)+"%"
             page.update()
-            tm.sleep(10)
-            '''
-            tm.sleep(x) - настройка, как часто
-            будет проходить анализ фильтра,
-            каждые х секунды
-            '''
+            tm.sleep(60)
+
+
+    def user_manual_filter_analise(e):
+        if filter_pressure_text_field.value != '':
+            filter_pressure_val = int(filter_pressure_text_field.value)
+            if filter_pressure_val <= 5000:
+                filter_status = "100%"
+                flow_user_analise_text.value = f"Поток:{filter_pressure_val * 0.0485} кг/с"
+                filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
+                flow_user_analise_text_cont.bgcolor = '#00A5FF'
+                filter_stat_user_analise_text_cont.bgcolor = '#00A5FF'
+            elif filter_pressure_val > 5000 and filter_pressure_val < 10000:
+                con = (1 - (filter_pressure_val - 5000) / 5000) * 100
+                filter_status = str(con) + "%"
+                flow_user_analise_text.value = f"Поток:{242.5 - filter_pressure_val * 0.00003} кг/с"
+                filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
+                flow_user_analise_text_cont.bgcolor = '#C5671F'
+                filter_stat_user_analise_text_cont.bgcolor = '#C5671F'
+            elif filter_pressure_val >= 10000:
+                filter_status = "0%"
+                flow_user_analise_text.value = f"Поток:{242.5 - filter_pressure_val * 0.00003} кг/с"
+                filter_stat_user_analise_text.value = "Состояние фильтра: " + filter_status
+                flow_user_analise_text_cont.bgcolor = '#AF0D0D'
+                filter_stat_user_analise_text_cont.bgcolor = '#AF0D0D'
+        page.update()
+
+    def start_threads():
+        math_and_ai_model_thread1 = threading.Thread(target=get_values_from_backend1)
+        math_and_ai_model_thread1.start()
+
+    #def graph_visual_open(e):
+    #    open_matplotlib_graph()
+    #    dlg_get_worker_help = ft.BottomSheet(graph_img, bgcolor='#013DFD')
+    #    page.open(dlg_get_worker_help)
+    #    page.update()
+
+
+    graph_open_icon_but1 = ft.IconButton(icon=ft.Icons.AUTO_GRAPH_ROUNDED, icon_size=30, icon_color='#00bbff', on_click=lambda e: graph_visual_open(e, page))
+    filter1_but_cont = ft.Row(controls=[filter1_name_text, ft.Row(controls=[graph_open_icon_but1,filter_qu1_cont])], spacing=87)
 
     filter1_list_tile = ft.ElevatedButton(content=filter1_but_cont,bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
                                           style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
                                           height=46,width=341,on_click=open_filter1_config)
+
+    filter2_list_tile = ft.ElevatedButton(content=filter2_but_cont, bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                          height=46, width=341,on_click=open_filter1_config)
+
+    filter3_list_tile = ft.ElevatedButton(content=filter3_but_cont, bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                          height=46, width=341,on_click=open_filter1_config)
+
+    filter4_list_tile = ft.ElevatedButton(content=filter4_but_cont, bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                          height=46, width=341,on_click=open_filter1_config)
+
+    filter5_list_tile = ft.ElevatedButton(content=filter5_but_cont, bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                          style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                          height=46, width=341,on_click=open_filter1_config)
+
     filters_column=ft.Column(controls=[all_filters_text_cont,filter1_list_tile,filter2_list_tile,filter3_list_tile,filter4_list_tile
                                        ,filter5_list_tile],horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                              alignment=ft.MainAxisAlignment.CENTER)
@@ -292,10 +335,17 @@ def main(page: ft.Page):
     user_filter_analise_but_text=ft.Text(value="Анализ фильтра",color='#ffffff',font_family='Manrope',size=15,
                           weight=ft.FontWeight.W_700)
 
+    user_mamual_analise_start_but = ft.ElevatedButton(content=user_manual_analise_start_but_text,
+                                                      bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
+                                                      style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+                                                      height=40, width=200, on_click=user_manual_filter_analise)
+
     return_to_filtres_icon_but_from_analise = ft.IconButton(icon=ft.Icons.KEYBOARD_RETURN_ROUNDED, icon_size=30,
                                                icon_color='#00A5FF',
                                                on_click=close_user_filter_analise)
-    return_to_filtres_icon_but_cont_from_analise = ft.Container(content=return_to_filtres_icon_but_from_analise, width=341, bgcolor=None,
+
+    end_analise_row=ft.Row(controls=[return_to_filtres_icon_but_from_analise,user_mamual_analise_start_but])
+    return_to_filtres_icon_but_cont_from_analise = ft.Container(content=end_analise_row, width=341, bgcolor=None,
                                                    alignment=ft.Alignment(-1, 0))
 
     user_filter_analise_but = ft.ElevatedButton(content=user_filter_analise_but_text,bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
@@ -354,7 +404,7 @@ def main(page: ft.Page):
     all_page_cont=ft.Container(content=all_page_filters_column,padding=ft.Padding(left=20,right=20,top=30,bottom=20),
                                alignment=ft.alignment.center)
 
-    page_bg_img=ft.Image(src="C:/Users/artem/PycharmProjects/PythonProject/app_background.jpg",
+    page_bg_img=ft.Image(src="C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/app_background.jpg",
                          height=846, width=393, fit=ft.ImageFit.CONTAIN)
 
     all_page_stack=ft.Stack(controls=[page_bg_img,all_page_cont])
