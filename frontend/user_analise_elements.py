@@ -20,3 +20,6 @@ filter_stat_user_analise_text_cont=ft.Container(content=filter_stat_user_analise
                                                 bgcolor=ft.colors.with_opacity(0.5, '#3A4EB1'),
                                                 height=80,width=345,border_radius=10,
                                          padding=ft.Padding(top=15,left=15,bottom=15,right=15))
+user_manual_analise_start_but_text = ft.Text(value="Начать анализ",color='#ffffff',font_family='Manrope',size=15,
+                          weight=ft.FontWeight.W_600)
+
