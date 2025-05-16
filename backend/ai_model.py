@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import os
-from backend.math_model_analise import *
+from rosatom_project.backend.math_model_analise import *
 
 
 class FilterDataset(Dataset):
@@ -38,7 +38,7 @@ class FilterConditionModel(nn.Module):
         return self.fc(x)
 
 
-def save_model(model, optimizer, path="C:/Users/artem/PycharmProjects/PythonProject/backend/filter_model"):
+def save_model(model, optimizer, path="C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/backend/filter_model"):
     torch.save({
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
@@ -46,7 +46,7 @@ def save_model(model, optimizer, path="C:/Users/artem/PycharmProjects/PythonProj
     print(f"Model saved to {path}.pth")
 
 
-def load_model(model, optimizer=None, path="C:/Users/artem/PycharmProjects/PythonProject/backend/filter_model") -> bool:
+def load_model(model, optimizer=None, path="C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/backend/filter_model") -> bool:
     if os.path.exists(f"{path}.pth"):
         checkpoint = torch.load(f"{path}.pth")
         model.load_state_dict(checkpoint['model_state_dict'])
@@ -81,8 +81,8 @@ def train_model(model, dataloader, criterion, optimizer, epochs=20):
     return model
 
 
-def main() -> list:
-    df = pd.read_csv("C:/Users/artem/PycharmProjects/PythonProject/backend/data.csv")
+def main1() -> list:
+    df = pd.read_csv("C:/Users/User/PycharmProjects/pythonProject5/rosatom_project/backend/data.csv")
 
     dataset = FilterDataset(df[['Value1', 'Value2', 'Empty']])
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
@@ -96,7 +96,7 @@ def main() -> list:
         model = train_model(model, dataloader, criterion, optimizer, epochs=20)
         save_model(model, optimizer)
 
-    data_list = start_api()
+    data_list = start_api1()
     print(data_list)
     model.eval()
     data = torch.tensor([data_list], dtype=torch.float32)
@@ -107,9 +107,8 @@ def main() -> list:
     return [predictions[0].item(),data_list[1], data_list[0]]
 
 
-def model_start() -> list:
-    list_data=main()
+def model_start1() -> list:
+    list_data=main1()
     return list_data
-
 
 
